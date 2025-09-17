@@ -1,0 +1,176 @@
+1. 회원가입
+/user/join
+request
+    email: String 회원가입할 id
+    pw: String 패스워드
+    email: String 이메일
+response
+    result: Int 성공/실패
+    msg: String 에러 메시지
+    email: String 회원가입한 id
+
+2. 로그인
+/user/login
+request
+    email: String
+    pw: String
+response
+    result: Int 성공/실패
+    msg : String 에러메시지
+    userkey: 사용자 키
+
+3. 사용자 정보
+/user/info
+request
+    userkey
+response
+    result
+    msg
+    data [ 
+            {
+                userkey: Int
+                nick: String
+                email: String
+            },
+            .
+            .
+            .
+        ]
+    
+    
+
+4. 사용자 정보 리스트
+/user/infolist
+request
+    userkey ; 내 유저키
+    userkeys : 정보를 조회할 유저키 (쉼표로 구분된 String) ex. 1,3,5,100,120
+response
+    result
+    msg 
+    data {
+        nick: String
+        email: String
+    }
+
+5. 사용자 검색
+/user/search
+request
+    emaill : 검색 이메일
+response
+    result
+    msg
+    data {
+        userkey        
+        nick
+        email
+    }
+
+11. 앨범 생성
+/album/create
+request
+    userkey: Int 생성하는 사람
+    title: 앨범 이름
+response
+    result
+    msg
+    albumkey: String 앨범 고유 키
+
+
+11. 앨범 가입
+/user/joinalbum
+request
+    userkey: Int 유저키
+    albumkey: 가입할 앨범키
+response
+    result: Int 
+    msg: String
+
+
+21. 사진업로드 : multipart form data
+/photo/upload
+request 
+    userkey Int
+    usernick TEXT
+    albumkey TEXT
+    image
+response
+    result Int
+    msg TEXT
+    path TEXT: image path
+
+22. 사진 리스트 
+/photo/photolist
+request
+    userkey Int
+    albumkey TEXT
+    lastphotokey TEXT
+response
+    result Int
+    msg TEXT
+    count Int
+    list {
+        photokey TEXT
+        photopath TEXT
+        owner Int
+        ownernick TEXT
+        albumkey TEXT
+        regdt DOUBLE
+    }
+
+31. 앨범에 사용자 초대
+/invite/sendInvite
+request
+    albumkey TEXT:
+    sendUserKey INT:
+    recvUserKey INT:
+    msg: TEXT:
+response
+    result
+    msg
+    data {
+        inviteKey INT:
+    }
+
+32. 내가 보낸 초대 목록
+/invite/sendList
+request
+    sendUserKey INT:
+response
+    result INT:
+    msg TEXT:
+    data [
+        {
+            inviteKey: INT
+            albumKey: TEXT
+            albumTitle: TEXT
+            recvUserKey: Int
+            recvNick: TEXT
+        }
+    ]
+
+33. 내가 받은 초대 목록
+/invite/receiveList
+request
+    recvUserKey INT
+response
+    result INT:
+    msg TEXT:
+    data [
+        {
+            inviteKey: INT
+            albumKey: TEXT
+            albumTitle: TEXT
+            sendUserKey: Int
+            sendNick: TEXT
+        }
+    ]
+
+34. 초대 상태 업데이트 (수락 / 거절)
+/invite/updateState
+request
+    inviteKey INT:
+    state INT: 1 or 2 / 1:수락 2:거절
+response
+    result INT:
+    msg TEXT:
+    
