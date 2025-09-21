@@ -9,7 +9,7 @@ router.post('/photolist', async (req, res) => {
 
   console.log(userKey + " / " + albumKey + ' / ' + lastPhotoKey)
 
-  // ---- 사용 예시 ----
+
   try {
     // 첫 페이지
     let result = await photoDB.getPhotos(albumKey, lastPhotoKey);

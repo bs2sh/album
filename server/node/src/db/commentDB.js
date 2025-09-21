@@ -15,7 +15,11 @@ comment
 
 async function addComment(userKey, comment, photoKey) {
     return new Promise((resolve, reject) => {
-        let userNick = userDB.getNick(userKey);
+			(async () => {
+
+
+        let userNick = await userDB.getNick(userKey);
+				console.log('user nick : ' + userNick);
         let sql = `
             INSERT INTO comment (photo_key, owner_key, owner_nick, comment, regdt)
             VALUES (?, ?, ?, ?, ?)
@@ -28,13 +32,14 @@ async function addComment(userKey, comment, photoKey) {
             Date.now()
         ];
 
-        db.run(sql, params, (err) => {
+        db.run(sql, params, function (err) {
             if (err) {
-                reject(err);
+              return reject(err);
             } else {
-                resolve(this.lastID);
+              return resolve(this.lastID);
             }
         });
+			})();
     });
 }
 
@@ -43,9 +48,9 @@ async function commentList(photoKey) {
         let sql = 'SELECT * FROM comment WHERE'
         db.all(sql, [photoKey], (err, rows) => {
             if (err) {
-                reject(err);
+              return reject(err);
             } else {
-                resolve(rows);
+              return resolve(rows);
             }
         });
     });
@@ -53,13 +58,13 @@ async function commentList(photoKey) {
 
 async function deleteComment(commentKey) {
     return new Promise((resolve, reject) => {
-			let sql = 'UPDATE comment SET enable = 0 WHEERE comment_key = ?';
+			let sql = 'UPDATE comment SET enable = 0 WHERE comment_key = ?';
 			db.run(sql, [commentKey], function (err) {
 				console.log('changes: ' + this.changes);
 				if (err) {
-					reject(err)
+					return reject(err)
 				} else {
-					resolve(this.changes)
+					return resolve(this.changes)
 				}
 			});
     });
@@ -68,5 +73,6 @@ async function deleteComment(commentKey) {
 
 module.exports = {
     addComment,
-    commentList
+    commentList,
+		deleteComment
 }

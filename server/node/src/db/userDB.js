@@ -123,6 +123,7 @@ async function getNick(userKey) {
       }
       
       let nick = row.nick;
+      console.log('get nickname row : ' + nick);
       return resolve(nick);
     });  
   })
