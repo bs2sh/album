@@ -45,13 +45,14 @@ async function addComment(userKey, comment, photoKey) {
 
 async function commentList(photoKey) {
     return new Promise((resolve, reject) => {
-        let sql = 'SELECT * FROM comment WHERE'
+				let sql = 'SELECT * FROM comment WHERE photo_key = ? AND enable = 1'
         db.all(sql, [photoKey], (err, rows) => {
-            if (err) {
-              return reject(err);
-            } else {
-              return resolve(rows);
-            }
+					console.log('rows >> ' + JSON.stringify(rows))					
+					if (err) {
+						return reject(err);
+					} else {
+						return resolve(rows);
+					}
         });
     });
 }

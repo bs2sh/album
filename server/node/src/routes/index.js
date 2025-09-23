@@ -24,7 +24,7 @@ const inviteUpdate = require('./invite/update')
 
 // comment
 const addComment = require('./comment/add')
-// const commentList = require('./comment/commentList')
+const commentList = require('./comment/commentList')
 const deleteComment = require('./comment/deleteComment')
 
 // 회원가입
@@ -45,7 +45,7 @@ router.use('/invite', inviteList)
 router.use('/invite', inviteUpdate)
 
 router.use('/comment', addComment)
-// router.use('/comment', commentList)
+router.use('/comment', commentList)
 router.use('/comment', deleteComment)
 
 module.exports = router
