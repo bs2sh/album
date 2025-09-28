@@ -13,3 +13,7 @@ struct BaseResponse<T: Decodable & Equatable>: Decodable, Equatable{
     var data: T?
 }
 
+struct EmptyModel: Codable, Equatable {
+    let result: Int
+    let msg: String
+}

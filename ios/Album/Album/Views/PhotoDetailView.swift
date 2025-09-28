@@ -6,125 +6,7 @@
 //
 
 import SwiftUI
-import Kingfisher // Kingfisher를 import 합니다.
-/*
-struct PhotoDetailView: View {
-    // 이미지 URL을 받도록 수정 (Optional URL)
-    var photo: Photo?
-
-    // MARK: - 제스처 상태 변수
-    
-    @State private var scale: CGFloat = 1.0
-    @State private var lastScale: CGFloat = 1.0
-
-    @State private var offset: CGSize = .zero
-    @State private var lastOffset: CGSize = .zero
-
-    // MARK: - Body
-    
-    var body: some View {
-        GeometryReader { proxy in
-            KFImage(photoUrl(photoPath: photo?.photopath ?? ""))
-                .placeholder {
-                    ProgressView()
-                }aaaaa
-                .resizable()
-                .scaledToFit()
-                .scaleEffect(scale)
-                .offset(offset)
-                .gesture(
-                    SimultaneousGesture(
-                        magnificationGesture(size: proxy.size),
-                        dragGesture(size: proxy.size) // 수정된 제스처가 적용됩니다.
-                    )
-                )
-                .onTapGesture(count: 2) {
-                    resetImageState()
-                }
-                .frame(width: proxy.size.width, height: proxy.size.height)
-        }
-    }
-
-    // MARK: - 제스처 함수
-    
-    private func magnificationGesture(size: CGSize) -> some Gesture {
-        MagnificationGesture()
-            .onChanged { value in
-                let delta = value / lastScale
-                lastScale = value
-                scale = max(scale * delta, 1.0)
-                // 줌 변경 시 위치를 즉시 보정합니다.
-                fixOffset(size: size)
-            }
-            .onEnded { _ in
-                lastScale = 1.0
-            }
-    }
-    
-    /// 드래그 제스처를 처리하는 함수 (수정된 부분)
-    private func dragGesture(size: CGSize) -> some Gesture {
-        DragGesture()
-            // 드래그하는 동안 실시간으로 위치를 제한합니다.
-            .onChanged { value in
-                // 확대된 상태에서만 이동 가능
-                guard scale > 1.0 else { return }
-                
-                // 이동 가능한 최대 거리 계산
-                let scaledImageWidth = (size.width * scale)
-                let scaledImageHeight = (size.height * scale)
-                
-                let maxOffsetX = (scaledImageWidth - size.width) / 2
-                let maxOffsetY = (scaledImageHeight - size.height) / 2
-                
-                // 현재 드래그 위치를 더한 새로운 offset 계산
-                var newOffset = CGSize(
-                    width: lastOffset.width + value.translation.width,
-                    height: lastOffset.height + value.translation.height
-                )
-                
-                // ✅ [핵심] 새로운 offset이 최대 이동 가능 범위를 벗어나지 않도록 제한
-                newOffset.width = max(min(newOffset.width, maxOffsetX), -maxOffsetX)
-                newOffset.height = max(min(newOffset.height, maxOffsetY), -maxOffsetY)
-
-                // 최종적으로 제한된 offset을 적용
-                self.offset = newOffset
-            }
-            // 드래그가 끝나면 최종 위치를 저장합니다.
-            .onEnded { value in
-                lastOffset = offset
-            }
-    }
-
-    // MARK: - 헬퍼 함수
-    
-    private func resetImageState() {
-        withAnimation(.interactiveSpring()) {
-            scale = 1.0
-            offset = .zero
-            lastScale = 1.0
-            lastOffset = .zero
-        }
-    }
-    
-    /// 줌 제스처 도중 위치를 보정하는 함수
-    private func fixOffset(size: CGSize) {
-        let scaledImageWidth = (size.width * scale)
-        let scaledImageHeight = (size.height * scale)
-        
-        let maxOffsetX = (scaledImageWidth - size.width) / 2
-        let maxOffsetY = (scaledImageHeight - size.height) / 2
-        
-        var newOffset = lastOffset
-        
-        newOffset.width = max(min(newOffset.width, maxOffsetX), -maxOffsetX)
-        newOffset.height = max(min(newOffset.height, maxOffsetY), -maxOffsetY)
-        
-        // 애니메이션 없이 즉시 위치를 보정해야 줌과 함께 자연스럽게 움직입니다.
-        offset = newOffset
-        lastOffset = newOffset
-    }
-}
-*/
+import Kingfisher
 
 struct PhotoDetailView: View {
     @State var photo: Photo?
@@ -132,21 +14,283 @@ struct PhotoDetailView: View {
     @State private var scale: CGFloat = 1.0
     @State private var lastScale: CGFloat = 1.0
     
+    @State private var showCommentOverlay = false
+    @StateObject private var viewModel = PhotoDetailViewModel()
     
     var body: some View {
+        
+        
         VStack {
             ImageZoomView(imageUrl: photoUrl(photoPath: photo?.photopath ?? ""))
+            
+            Spacer()
+            
+            Button {
+                showCommentOverlay.toggle()
+            } label: {
+                
+                HStack {
+                    Image(systemName: "message.fill")
+                    if showCommentOverlay {
+                        Text("댓글 숨기기")
+                    } else {
+                        Text("댓글 보기 (\(viewModel.commentList.count))")
+                    }
+                }
+                .font(.headline)
+                .foregroundStyle(.white)
+                .padding()
+                .background(.black.opacity(0.5))
+                .clipShape(.capsule)
+                .shadow(radius: 10)
+                
+            }
+            
+            if showCommentOverlay {
+                CommentOverlayView(viewModel: viewModel, isPresented: $showCommentOverlay, photo: photo)
+                    .transition(.move(edge: .bottom))
+            }
         }
-        .background(Color.black.opacity(0.95))
+        .animation(.spring(), value: showCommentOverlay)
         .navigationTitle("상세보기")
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            if let photo = photo {
+                viewModel.fetchCommentList(photoKey: photo.photokey)
+            }
+        }
+        .background(
+            Color.black.opacity(0.9)
+        )
         
     }
 }
 
+// MARK: - 댓글
+
+struct CommentOverlayView : View {
+    @AppStorage("userkey") var userKey: Int?
+    @StateObject var viewModel: PhotoDetailViewModel
+    @Binding var isPresented: Bool
+    let photo: Photo?
+    
+    @State private var comments: [Comment] = [
+        Comment(commentKey: 600, ownerKey: 4, ownerNick: "myname", comment: "ㄷㅐㅅㄱㅡㄹㅇㅣㅂㄴㅣㄷㅏ.2", regdt: 1758465646343.0),
+         Comment(commentKey: 700, ownerKey: 5, ownerNick: "myname", comment: "ㄷㅐㅅㄱㅡㄹㅇㅣㅂㄴㅣㄷㅏ.2", regdt: 1758465739331.0),
+        Comment(commentKey: 800, ownerKey: 6, ownerNick: "myname", comment: "ㄷㅐㅅㄱㅡㄹㅇㅣㅂㄴㅣㄷㅏ.2", regdt: 1758465805871.0)
+    ]
+    
+    @State private var newCommentText: String = ""
+    
+    var body: some View {
+        ZStack(alignment: .bottom) {
+            // 반투명 배경 (탭하면 뷰가 닫힘)
+            Color.black.opacity(0.5)
+                .edgesIgnoringSafeArea(.all)
+                .onTapGesture {
+                    closeView()
+                }
+            VStack(spacing: 0) {
+                // 상단 핸들 및 닫기 버튼
+                headerView
+
+                    // 사진 정보 뷰 추가
+                VStack(spacing: 0) {
+                    
+                    List {
+                        PhotoInfoView
+                            .listRowBackground(Color.clear)
+                        ForEach(viewModel.commentList) { comment in
+                            HStack(alignment: .top) {
+                                VStack(alignment: .leading) {
+                                    HStack {
+                                        Text(comment.ownerNick)
+                                            .font(.headline)
+                                        Text(formattedDate(from: comment.regdt))
+                                            .font(.caption)
+                                    }
+                                    Text(comment.comment)
+                                        .font(.subheadline)
+                                }
+                                
+                                Spacer()
+                            }
+                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                if let userKey = userKey, comment.ownerKey == userKey {
+                                    Button(role: .destructive) {
+                                        withAnimation {
+                                            viewModel.deleteComment(commentKey: comment.commentKey)
+                                        }
+                                    } label: {
+                                        Label("삭제", systemImage: "trash.fill")
+                                    }
+                                }
+                            }
+                            .listRowBackground(Color.clear)
+                        }
+                    }
+                    .listStyle(.plain)
+                    
+                }
+                // 댓글 리스트뷰
+//                commentListView
+                
+                Divider()
+                
+                commentInputView
+            }
+            .background(.thinMaterial)
+            .cornerRadius(20, corners: [.topLeft, .topRight])
+            .frame(maxHeight: UIScreen.main.bounds.height * 0.7)
+            .edgesIgnoringSafeArea(.bottom)
+        }
+    }
+    
+    //  상단 핸들 및 닫기 버튼 뷰
+    private var headerView: some View {
+        HStack {
+            Spacer()
+            VStack(spacing: 4) {
+                Capsule()
+                    .frame(width: 40, height: 5)
+                    .foregroundColor(.secondary)
+            }
+            Spacer()
+        }
+        .padding()
+        .contentShape(Rectangle())
+        .gesture(
+            // 아래로 스와이프하여 닫기
+            DragGesture().onEnded({ value in
+                if value.translation.height > 50 {
+                    closeView()
+                }
+            })
+        )
+    }
+//  MARK: - 사진 정보 뷰
+    @ViewBuilder
+    private var PhotoInfoView: some View {
+        if let photo = photo {
+            VStack(alignment: .leading, spacing: 8) {
+//            VStack {
+                
+                // 등록한 사람 닉네임
+                HStack(alignment: .bottom) {
+                    Text(photo.ownernick)
+                        .font(.headline)
+                        .fontWeight(.bold)
+                    Text(formattedDate(from: Double(photo.regdt)))
+                        .font(.caption2)
+                }
+                
+                Divider()
+                    .background(.gray.opacity(0.5))
+                
+                // 사진 설명.
+                Text("사진 설명 들어감. 개발중이에요~~")
+                    .font(.subheadline)
+                    .foregroundStyle(.primary.opacity(0.9))
+                    .padding(.top, 4)
+                    
+            }
+            
+            .padding([.bottom])
+        }
+    }
+     
+    
+    
+    
+// MARK: - 댓글 목록 뷰
+    /*
+    private var commentListView: some View {
+        ScrollView {
+            LazyVStack(alignment: .leading, spacing: 15) {
+//                ForEach(viewModel.commentList, id: \.self) { comment in
+                ForEach(comments , id: \.self) { comment in
+                    HStack(alignment: .top) {
+                        Image(systemName: "person.crop.circle.fill")
+                            .font(.title)
+                            .foregroundStyle(.gray)
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Text(comment.ownerNick)
+                                    .font(.headline)
+                                Text(formattedDate(from: comment.regdt))
+                                    .font(.caption)
+//                                    .foregroundColor(.secondary)
+                            }
+                            Text(comment.comment)
+                                .font(.subheadline)
+                        }
+                    }
+                }
+            }
+            .padding()
+        }
+    }
+     */
+//  MARK: - 댓글 입력 뷰
+    private var commentInputView: some View {
+        HStack(spacing: 15) {
+            
+            // 댓글 입력창
+            TextField("댓글 입력", text: $newCommentText)
+                .textFieldStyle(.plain)
+                .padding(10)
+                .background(Color(.systemGray6))
+                .cornerRadius(15)
+            
+            // 댓글 등록 버튼
+            Button(action: addComment) {
+                Image(systemName: "arrow.up.circle.fill")
+                    .font(.largeTitle)
+                    .buttonStyle(.plain)
+                    .tint(.accentColor)
+            }
+            .disabled(newCommentText.isEmpty)
+        }
+        .padding()
+        .background(.thinMaterial)
+    }
+    
+    // 댓글 추가
+    private func addComment() {
+        if let userKey = userKey,viewModel.photoKey.isEmpty == false {
+            viewModel.addComment(userKey: userKey, photoKey: viewModel.photoKey, comment: newCommentText)
+        }
+        hideKeyboard()
+    }
+    
+    // 댓글 리스트 뷰 숨김
+    private func closeView() {
+        withAnimation(.spring()) {
+            isPresented = false
+        }
+        hideKeyboard()
+    }
+}
+
+
+
 #Preview {
-    let photo = Photo(photokey: "ef6a3309-bf53-4b48-8b76-fa88afb6c318", photopath: "uploads/imgs/1753156284536-image1.jpg", owner: 3, ownernick: "xxxcc", albumkey: "197be471-4109-4602-8041-b3bdda77baf7", regdt: 1753156284558)
+    let photo = Photo(photokey: "ef6a3309-bf53-4b48-8b76-fa88afb6c318", photopath: "uploads/imgs/1753156284536-image1.jpg", owner: 3, ownernick: "xxxcc", albumkey: "197be471-4109-4602-8041-b3bdda77baf7", regdt: 1758465739331)
     PhotoDetailView(photo: photo)
         
 }
 
+#Preview {
+    @Previewable @State var isPresented = true
+    let photo = Photo(photokey: "f3b86da9-f609-4123-b659-dd1fb866e283", photopath: "uploads/imgs/1753156284552-image2.jpg", owner: 3, ownernick: "xxxcc", albumkey: "197be471-4109-4602-8041-b3bdda77baf7", regdt: 1753156284559)
+    CommentOverlayView(viewModel: PhotoDetailViewModel(), isPresented: $isPresented, photo: photo)
+}
+
+
+#if canImport(UIKit)
+extension View {
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+#endif

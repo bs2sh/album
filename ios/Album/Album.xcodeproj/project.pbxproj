@@ -18,6 +18,8 @@
 		A23156CE2E1C1C6700906FB2 /* AlbumListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A23156CD2E1C1C6400906FB2 /* AlbumListView.swift */; };
 		A23156D22E1CFD3000906FB2 /* CreateAlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A23156D12E1CFD3000906FB2 /* CreateAlbumView.swift */; };
 		A23156D42E1D877800906FB2 /* AlbumModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A23156D32E1D877300906FB2 /* AlbumModel.swift */; };
+		A2664F822E8254ED00FB323F /* PhotoDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2664F812E8254E500FB323F /* PhotoDetailViewModel.swift */; };
+		A2664F842E825D1500FB323F /* CommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2664F832E825D0D00FB323F /* CommentModel.swift */; };
 		A271E5822E57921B00106EDA /* SendInviteListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A271E5812E57921500106EDA /* SendInviteListCell.swift */; };
 		A271E5852E5836EA00106EDA /* ReceiveInviteListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A271E5842E5836DF00106EDA /* ReceiveInviteListCell.swift */; };
 		A271E5892E603BB200106EDA /* MyInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A271E5882E603BAA00106EDA /* MyInfoModel.swift */; };
@@ -62,6 +64,8 @@
 		A23156CD2E1C1C6400906FB2 /* AlbumListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListView.swift; sourceTree = "<group>"; };
 		A23156D12E1CFD3000906FB2 /* CreateAlbumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAlbumView.swift; sourceTree = "<group>"; };
 		A23156D32E1D877300906FB2 /* AlbumModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumModel.swift; sourceTree = "<group>"; };
+		A2664F812E8254E500FB323F /* PhotoDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailViewModel.swift; sourceTree = "<group>"; };
+		A2664F832E825D0D00FB323F /* CommentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentModel.swift; sourceTree = "<group>"; };
 		A271E5812E57921500106EDA /* SendInviteListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendInviteListCell.swift; sourceTree = "<group>"; };
 		A271E5842E5836DF00106EDA /* ReceiveInviteListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiveInviteListCell.swift; sourceTree = "<group>"; };
 		A271E5882E603BAA00106EDA /* MyInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoModel.swift; sourceTree = "<group>"; };
@@ -119,6 +123,7 @@
 		A283FE732E28D32300E82C0F /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				A2664F812E8254E500FB323F /* PhotoDetailViewModel.swift */,
 				A2CD82DC2E7B021600398EBD /* AlbumViewModel.swift */,
 				A2D362772E6759A900EAA492 /* ViewModel.swift */,
 				A228911B2E539423003A2830 /* InviteListViewModel.swift */,
@@ -180,6 +185,7 @@
 		A28D16142E03F6DC0011563A /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				A2664F832E825D0D00FB323F /* CommentModel.swift */,
 				A271E5882E603BAA00106EDA /* MyInfoModel.swift */,
 				A22891122E4B9040003A2830 /* InviteModel.swift */,
 				A283FE782E28D64600E82C0F /* BaseResponse.swift */,
@@ -316,7 +322,9 @@
 				A27B836D2E0A8F23005B2C54 /* JoinModel.swift in Sources */,
 				A283FE7B2E312EEA00E82C0F /* PhotoListModel.swift in Sources */,
 				A28D16162E03F6ED0011563A /* LoginModel.swift in Sources */,
+				A2664F842E825D1500FB323F /* CommentModel.swift in Sources */,
 				A283FE8E2E4326D100E82C0F /* MemberInviteView.swift in Sources */,
+				A2664F822E8254ED00FB323F /* PhotoDetailViewModel.swift in Sources */,
 				A2FED7D42E43A83600313789 /* MemberSearchViewModel.swift in Sources */,
 				A23156D42E1D877800906FB2 /* AlbumModel.swift in Sources */,
 				A28D160D2E03F6370011563A /* ContentView.swift in Sources */,

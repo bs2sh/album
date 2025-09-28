@@ -7,13 +7,13 @@ const userDB = require('../../db/userDB')
 router.post('/addComment', (req, res) => {
 	console.log('/comment/addComment >> ' + JSON.stringify(req.body));
 
-	let { photoKey, ownerKey, comment } = req.body;
+	let { photoKey, userKey, comment } = req.body;
 	console.log('++++' + photoKey + ' / ' + comment);
 
 	(async () => {
 		try {   
 			console.log('>>>>>>>>>>');
-			let commentKey = await commentDB.addComment(ownerKey, comment, photoKey);
+			let commentKey = await commentDB.addComment(userKey, comment, photoKey);
 			console.log('comment key' + commentKey);
 			if (commentKey < 1) {
 					res.json({

@@ -174,3 +174,44 @@ response
     result INT:
     msg TEXT:
     
+41. 댓글 등록
+/comment/add
+request
+    photoKey TEXT: 댓글을 등록할 사진키
+    ownerKey INT: 댓글 작성자 유저키
+    comment TEXT: 댓글 내용
+response
+    result
+    msg 
+    data {
+        commentKey INT: 등록한 댓글키
+    }
+
+42. 댓글 삭제
+/comment/deleteComment
+request
+    commentKey INT: 삭제할 댓글키
+response
+    result
+    msg    
+
+43. 댓글 리스트
+/comment/commentList
+request
+    photoKey TEXT: 
+response 
+    result
+    msg
+    data : [
+        {
+            commentKey INT: 댓글키
+            ownerKey INT: 올린사람 유저키
+            ownerNick TEXT: 닉네임
+            comment TEXT: 댓글 내용
+            regdt DOUBLE: 등록일
+        }
+
+        .
+        .
+        .
+    ]

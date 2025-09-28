@@ -29,3 +29,10 @@ func photoUrl(photoPath: String) -> URL {
     return URL(string:"http://127.0.0.1:3100/image/\(path)")!
 }
 
+func formattedDate(from timestamp: Double) -> String {
+    let date = Date(timeIntervalSince1970: timestamp)
+    let formatter = RelativeDateTimeFormatter()
+    formatter.locale = Locale(identifier: "ko_KR")
+    formatter.unitsStyle = .abbreviated
+    return formatter.localizedString(for: date, relativeTo: Date())
+}

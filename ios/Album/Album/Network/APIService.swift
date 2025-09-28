@@ -28,6 +28,9 @@ enum API: String {
     case sendInviteList
     case receiveInviteList
     case updateInvite
+    case addComment
+    case deleteComment
+    case commentList
     
     
     var url: URL {
@@ -58,6 +61,12 @@ enum API: String {
                 return URL(string: server_url + "/invite/receiveList")!
             case .updateInvite:
                 return URL(string: server_url + "/invite/update")!
+            case .addComment:
+                return URL(string: server_url + "/comment/addComment")!
+            case .deleteComment:
+                return URL(string: server_url + "/comment/deleteComment")!
+            case .commentList:
+                return URL(string: server_url + "/comment/commentList")!
         }
     }
 
