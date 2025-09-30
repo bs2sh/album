@@ -42,12 +42,19 @@ class PhotoDetailViewModel: ViewModel {
             .sink { [weak self] completion in
                 self?.completion(completion: completion)
             } receiveValue: { [weak self] result in
+                guard let self = self else { return }
+                
                 if result.result == 0 {
-                    self?.alert = true
-                    self?.alertMsg = result.msg
+                    self.alert = true
+                    self.alertMsg = result.msg
                 } else {
                     if let data = result.data {
-                        self?.addedCommentKey = data.commentKey
+                        if self.addedCommentKey != data.commentKey {
+                            self.alert = true
+                            self.alertMsg = "댓글이 등록되었습니다."
+                            self.addedCommentKey = data.commentKey
+                            self.fetchCommentList(photoKey: self.photoKey)
+                        }
                     }
                 }
             }
@@ -61,16 +68,16 @@ class PhotoDetailViewModel: ViewModel {
             .sink { [weak self] completion in
                 self?.completion(completion: completion)
             } receiveValue: { [weak self] result in
+                guard let self = self else { return }
+                
                 if result.result == 0 {
-                    self?.alert = true
-                    self?.alertMsg = result.msg
+                    self.alert = true
+                    self.alertMsg = result.msg
                 } else {
-                    self?.deletedCommentKey = commentKey
+                    self.deletedCommentKey = commentKey
+                    self.fetchCommentList(photoKey: self.photoKey)
                 }
             }
             .store(in: &cancellables)
     }
-    
-    
-    
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A2234B812E8AF3900028FB29 /* KeyboardResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2234B802E8AF3870028FB29 /* KeyboardResponder.swift */; };
 		A22891132E4B9045003A2830 /* InviteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22891122E4B9040003A2830 /* InviteModel.swift */; };
 		A22891152E4C5D11003A2830 /* TextInputPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22891142E4C5D00003A2830 /* TextInputPopup.swift */; };
 		A22891172E4F9D4C003A2830 /* MyInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22891162E4F9D3F003A2830 /* MyInfoView.swift */; };
@@ -53,6 +54,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A2234B802E8AF3870028FB29 /* KeyboardResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardResponder.swift; sourceTree = "<group>"; };
 		A22891122E4B9040003A2830 /* InviteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteModel.swift; sourceTree = "<group>"; };
 		A22891142E4C5D00003A2830 /* TextInputPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputPopup.swift; sourceTree = "<group>"; };
 		A22891162E4F9D3F003A2830 /* MyInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoView.swift; sourceTree = "<group>"; };
@@ -123,9 +125,9 @@
 		A283FE732E28D32300E82C0F /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				A2D362772E6759A900EAA492 /* ViewModel.swift */,
 				A2664F812E8254E500FB323F /* PhotoDetailViewModel.swift */,
 				A2CD82DC2E7B021600398EBD /* AlbumViewModel.swift */,
-				A2D362772E6759A900EAA492 /* ViewModel.swift */,
 				A228911B2E539423003A2830 /* InviteListViewModel.swift */,
 				A2FED7D32E43A82E00313789 /* MemberSearchViewModel.swift */,
 				A283FE872E408F7000E82C0F /* MembersViewModel.swift */,
@@ -226,6 +228,7 @@
 		A2B888642E24B40C000D886A /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				A2234B802E8AF3870028FB29 /* KeyboardResponder.swift */,
 				A23156CB2E1C1A7100906FB2 /* Shared.swift */,
 				A23156C92E1312D400906FB2 /* Extensions.swift */,
 				A23156C72E13093D00906FB2 /* CustomTextField.swift */,
@@ -332,6 +335,7 @@
 				A283FE792E28D64E00E82C0F /* BaseResponse.swift in Sources */,
 				A23156C82E13094300906FB2 /* CustomTextField.swift in Sources */,
 				A283FE882E408F7600E82C0F /* MembersViewModel.swift in Sources */,
+				A2234B812E8AF3900028FB29 /* KeyboardResponder.swift in Sources */,
 				A2CD82DD2E7B021C00398EBD /* AlbumViewModel.swift in Sources */,
 				A283FE752E28D34F00E82C0F /* UserModel.swift in Sources */,
 				A22891192E538AD3003A2830 /* InviteListView.swift in Sources */,

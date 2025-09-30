@@ -19,50 +19,48 @@ struct PhotoDetailView: View {
     
     var body: some View {
         
-        
-        VStack {
+        ZStack {
             ImageZoomView(imageUrl: photoUrl(photoPath: photo?.photopath ?? ""))
             
-            Spacer()
-            
-            Button {
-                showCommentOverlay.toggle()
-            } label: {
+            VStack {
+                Spacer()
                 
-                HStack {
-                    Image(systemName: "message.fill")
-                    if showCommentOverlay {
-                        Text("댓글 숨기기")
-                    } else {
-                        Text("댓글 보기 (\(viewModel.commentList.count))")
+                if showCommentOverlay == false {
+                    Button {
+                        showCommentOverlay.toggle()
+                    } label: {
+                        
+                        HStack {
+                            Image(systemName: "message.fill")
+                            if showCommentOverlay {
+                                Text("댓글 숨기기")
+                            } else {
+                                Text("댓글 보기 (\(viewModel.commentList.count))")
+                            }
+                        }
+                        .font(.headline)
+                        .foregroundStyle(.white)
+                        .padding()
+                        .background(.black.opacity(0.5))
+                        .clipShape(.capsule)
+                        .shadow(radius: 10)
                     }
                 }
-                .font(.headline)
-                .foregroundStyle(.white)
-                .padding()
-                .background(.black.opacity(0.5))
-                .clipShape(.capsule)
-                .shadow(radius: 10)
                 
+                if showCommentOverlay {
+                    CommentOverlayView(viewModel: viewModel, isPresented: $showCommentOverlay, photo: photo)
+                        .transition(.move(edge: .bottom))
+                }
             }
-            
-            if showCommentOverlay {
-                CommentOverlayView(viewModel: viewModel, isPresented: $showCommentOverlay, photo: photo)
-                    .transition(.move(edge: .bottom))
+            .animation(.spring(), value: showCommentOverlay)
+            .navigationTitle("상세보기")
+            .navigationBarTitleDisplayMode(.inline)
+            .onAppear {
+                if let photo = photo {
+                    viewModel.fetchCommentList(photoKey: photo.photokey)
+                }
             }
         }
-        .animation(.spring(), value: showCommentOverlay)
-        .navigationTitle("상세보기")
-        .navigationBarTitleDisplayMode(.inline)
-        .onAppear {
-            if let photo = photo {
-                viewModel.fetchCommentList(photoKey: photo.photokey)
-            }
-        }
-        .background(
-            Color.black.opacity(0.9)
-        )
-        
     }
 }
 
@@ -85,8 +83,9 @@ struct CommentOverlayView : View {
     var body: some View {
         ZStack(alignment: .bottom) {
             // 반투명 배경 (탭하면 뷰가 닫힘)
-            Color.black.opacity(0.5)
+            Color.black.opacity(0.1)
                 .edgesIgnoringSafeArea(.all)
+                .cornerRadius(10, corners: [.topLeft, .topRight])
                 .onTapGesture {
                     closeView()
                 }
@@ -106,7 +105,7 @@ struct CommentOverlayView : View {
                                     HStack {
                                         Text(comment.ownerNick)
                                             .font(.headline)
-                                        Text(formattedDate(from: comment.regdt))
+                                        Text(formattedDate(from: comment.regdt / 1000))
                                             .font(.caption)
                                     }
                                     Text(comment.comment)
@@ -139,11 +138,17 @@ struct CommentOverlayView : View {
                 
                 commentInputView
             }
-            .background(.thinMaterial)
             .cornerRadius(20, corners: [.topLeft, .topRight])
             .frame(maxHeight: UIScreen.main.bounds.height * 0.7)
-            .edgesIgnoringSafeArea(.bottom)
+            .background(.thinMaterial)
+//            .edgesIgnoringSafeArea(.bottom)
         }
+        .alert(viewModel.alertMsg, isPresented: $viewModel.alert) {
+            Button("확인") {
+                newCommentText = ""
+            }
+        }
+
     }
     
     //  상단 핸들 및 닫기 버튼 뷰
@@ -180,7 +185,7 @@ struct CommentOverlayView : View {
                     Text(photo.ownernick)
                         .font(.headline)
                         .fontWeight(.bold)
-                    Text(formattedDate(from: Double(photo.regdt)))
+                    Text(formattedDate(from: Double(photo.regdt) / 1000))
                         .font(.caption2)
                 }
                 
@@ -241,6 +246,8 @@ struct CommentOverlayView : View {
                 .padding(10)
                 .background(Color(.systemGray6))
                 .cornerRadius(15)
+                .autocorrectionDisabled()
+//                .keyboardType(.asciiCapable)
             
             // 댓글 등록 버튼
             Button(action: addComment) {
@@ -252,7 +259,6 @@ struct CommentOverlayView : View {
             .disabled(newCommentText.isEmpty)
         }
         .padding()
-        .background(.thinMaterial)
     }
     
     // 댓글 추가
