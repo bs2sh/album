@@ -50,10 +50,13 @@ struct PhotoListView: View {
         .navigationDestination(item: $selectedPhoto) { photo in
             PhotoDetailView(photo: photo)
         }
-        .navigationTitle(album?.title ?? "앨범")
         .navigationBarTitleDisplayMode(.inline)
-        .navigationBarTitleTextColor(.black)
         .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text(album?.title ?? "앨범")
+                    .font(.headline)
+                    .foregroundColor(.black)
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 HStack {
                     Button {
