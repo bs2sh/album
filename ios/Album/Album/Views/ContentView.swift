@@ -13,7 +13,7 @@ struct ContentView: View {
     
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             if let userKey = userKey, userKey > 0 {
                 AlbumListView()
             }
