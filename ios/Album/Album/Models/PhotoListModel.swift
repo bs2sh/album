@@ -22,7 +22,7 @@ struct PhotoList: Codable, Equatable {
 }
 
 // MARK: - Photo
-struct Photo: Codable, Identifiable, Equatable {
+struct Photo: Codable, Hashable, Identifiable, Equatable {
     var id: String { photokey }
     let photokey, photopath: String
     let owner: Int
