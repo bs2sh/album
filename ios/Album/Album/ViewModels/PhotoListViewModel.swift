@@ -23,8 +23,8 @@ class PhotoListViewModel: ObservableObject {
         photoList(userKey: userKey, albumKey: albumKey, lastPhotoKey: "")
     }
     
-    func uploadPhoto(userkey: Int, usernick: String, albumkey: String, images: [UIImage]) {
-        APIService.uploadPhoto(userkey: userkey, usernick: usernick, albumkey: albumkey, images: images)
+    func uploadPhoto(userkey: Int, usernick: String, albumkey: String, photos: [(image: UIImage, description: String)]) {
+        APIService.uploadPhoto(userkey: userkey, usernick: usernick, albumkey: albumkey, photos: photos)
             .receive(on: DispatchQueue.main)
             .print("PhotoViewModel >> ")
             .sink { [weak self] completion in

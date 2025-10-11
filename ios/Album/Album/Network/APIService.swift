@@ -183,52 +183,68 @@ class APIService {
             .eraseToAnyPublisher()
     }
     
-    static func uploadPhoto(userkey: Int, usernick: String, albumkey: String, images: [UIImage]) -> AnyPublisher<UploadPhoto, Error> {
-        // 이미지 데이터부터 처리하자.
-        
-        print("image count : \(images.count)")
-        
-        let boundary = UUID().uuidString
-        var request = URLRequest(url: API.photoUpload.url)
-        request.httpMethod = "POST"
-        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-        
-        var body = Data()
-        // 이미지 배열 최대 5개만 전송
-        for (i, image) in images.prefix(5).enumerated() {
-            guard let imageData = image.jpegData(compressionQuality: 0.8) else { continue }
-            print(">>> image data size : \(imageData.count)")
-            let filename = "image\(i+1).jpg"
-            let mimetype = "image/jpeg"
-            body.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
-            body.append("Content-Disposition: form-data; name=\"images\"; filename=\"\(filename)\"\r\n".data(using: .utf8)!)
-            body.append("Content-Type: \(mimetype)\r\n\r\n".data(using: .utf8)!)
-            body.append(imageData)
-            body.append("\r\n".data(using: .utf8)!)
+    static func uploadPhoto(userkey: Int, usernick: String, albumkey: String, photos: [(image: UIImage, description: String)]) -> AnyPublisher<UploadPhoto, Error> {
+            
+            print("Uploading photo count : \(photos.count)")
+            
+            // --- 1. 기본 요청 설정 ---
+            let boundary = UUID().uuidString
+            var request = URLRequest(url: API.photoUpload.url)
+            request.httpMethod = "POST"
+            request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+            
+            var body = Data()
+            
+            // --- 2. 이미지와 설명 데이터 추가 (최대 5개) ---
+            // photos 배열에서 최대 5개의 항목을 순회합니다.
+            for (i, photo) in photos.prefix(5).enumerated() {
+                // 이미지 데이터 처리
+                guard let imageData = photo.image.jpegData(compressionQuality: 0.8) else { continue }
+                
+                let index = i + 1
+                print(">>> processing image\(index) data size : \(imageData.count)")
+                
+                // (1) 이미지 파트
+                let imageFilename = "image\(index).jpg"
+                let imageMimetype = "image/jpeg"
+                body.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
+                body.append("Content-Disposition: form-data; name=\"image\(index)\"; filename=\"\(imageFilename)\"\r\n".data(using: .utf8)!)
+                body.append("Content-Type: \(imageMimetype)\r\n\r\n".data(using: .utf8)!)
+                body.append(imageData)
+                body.append("\r\n".data(using: .utf8)!)
+                
+                // (2) 설명 파트
+                body.append("--\(boundary)\r\n".data(using: .utf8)!)
+                body.append("Content-Disposition: form-data; name=\"description\(index)\"\r\n\r\n".data(using: .utf8)!)
+                body.append(photo.description.data(using: .utf8)!)
+                body.append("\r\n".data(using: .utf8)!)
+            }
+            
+            // --- 3. 추가적인 텍스트 필드들 ---
+            let fields = [
+                ("userkey", String(userkey)),
+                ("usernick", usernick),
+                ("albumkey", albumkey)
+            ]
+            for (key, value) in fields {
+                body.append("--\(boundary)\r\n".data(using: .utf8)!)
+                body.append("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n".data(using: .utf8)!)
+                body.append(value.data(using: .utf8)!)
+                body.append("\r\n".data(using: .utf8)!)
+            }
+            
+            // --- 4. 요청 종료 ---
+            body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+            
+            request.httpBody = body
+            
+            // --- 5. 네트워크 요청 및 응답 처리 ---
+            return URLSession.shared.dataTaskPublisher(for: request)
+                .print("Upload >>")
+                .map(\.data)
+                .decode(type: UploadPhoto.self, decoder: JSONDecoder())
+                .eraseToAnyPublisher()
         }
-        
-        // 추가 필드들
-        let fields = [
-            ("userkey", String(userkey)),
-            ("usernick", usernick),
-            ("albumkey", albumkey)
-        ]
-        for (key, value) in fields {
-            body.append("--\(boundary)\r\n".data(using: .utf8)!)
-            body.append("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n".data(using: .utf8)!)
-            body.append(value.data(using: .utf8)!)
-            body.append("\r\n".data(using: .utf8)!)
-        }
-        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
-        
-        request.httpBody = body
-        
-        return URLSession.shared.dataTaskPublisher(for: request)
-            .print("Upload >>")
-            .map(\.data)
-            .decode(type: UploadPhoto.self, decoder: JSONDecoder())
-            .eraseToAnyPublisher()
-    }
     
     static func photoList(userKey: Int, albumKey: String, lastPhotoKey: String) -> AnyPublisher<PhotoListModel, Error> {
         let params = [

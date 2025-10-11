@@ -139,6 +139,7 @@ struct PhotoListView: View {
                 onUpload: { photosToUpload in
                     let images = photosToUpload.map { $0.image }
                     let descriptions = photosToUpload.map { $0.description }
+                    let photos = zip(images, descriptions).map { ($0, $1) }
                     
                     // TODO: 설명을 함께 전송하려면 ViewModel과 APIService 수정이 필요합니다.
                     print("업로드할 사진 설명: \(descriptions)")
@@ -146,7 +147,7 @@ struct PhotoListView: View {
                     if let userKey = userKey,
                        let nick = userViewModel.user?.nick,
                        let albumkey = album?.albumkey {
-                        viewModel.uploadPhoto(userkey: userKey, usernick: nick, albumkey: albumkey, images: images)
+                        viewModel.uploadPhoto(userkey: userKey, usernick: nick, albumkey: albumkey, photos: photos)
                     }
                     isShowingUploadSheet = false
                 },
