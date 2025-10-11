@@ -27,6 +27,10 @@ struct PhotoListView: View {
     // Paging: 다음 페이지 로딩 중복 방지를 위한 상태 변수
     @State private var isLoadingNextPage = false
     
+    // MARK: - 사진 업로드 시트를 위한 상태 변수
+    @State private var uploadablePhotos: [UploadablePhoto] = []
+    @State private var isShowingUploadSheet = false
+    
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 5) {
@@ -88,25 +92,29 @@ struct PhotoListView: View {
             }
         }
         .onChange(of: selectedItems) { _, newItems in
-            guard !newItems.isEmpty else { return }
-
-            Task {
-                var images: [UIImage] = []
-                for item in newItems {
-                    if let data = try? await item.loadTransferable(type: Data.self),
-                       let image = UIImage(data: data) {
-                        images.append(image)
-                    }
-                }
-                
-                selectedItems = []
-                
-                if let userKey = userKey,
-                   let nick = userViewModel.user?.nick,
-                   let albumkey = album?.albumkey {
-                    viewModel.uploadPhoto(userkey: userKey, usernick: nick, albumkey: albumkey, images: images)
-                }
-            }
+            
+            // 사진이 선택되면 바로 업로드하는 대신, 업로드 시트를 준비합니다.
+            preparePhotosForUpload(items: newItems)
+            
+//            guard !newItems.isEmpty else { return }
+//
+//            Task {
+//                var images: [UIImage] = []
+//                for item in newItems {
+//                    if let data = try? await item.loadTransferable(type: Data.self),
+//                       let image = UIImage(data: data) {
+//                        images.append(image)
+//                    }
+//                }
+//                
+//                selectedItems = []
+//                
+//                if let userKey = userKey,
+//                   let nick = userViewModel.user?.nick,
+//                   let albumkey = album?.albumkey {
+//                    viewModel.uploadPhoto(userkey: userKey, usernick: nick, albumkey: albumkey, images: images)
+//                }
+//            }
         }
         .onChange(of: viewModel.uploadResult) {
             if $1?.result == 1 {
@@ -123,6 +131,32 @@ struct PhotoListView: View {
         .alert(viewModel.errMsg ?? "사진 업로드 에러", isPresented: $viewModel.uploadErrorAlert) {
             Button("확인", role: .cancel) {}
         }
+        
+        // 사진 설명입력 시트
+        .sheet(isPresented: $isShowingUploadSheet) {
+            PhotoUploadSheetView(
+                uploadablePhotos: $uploadablePhotos,
+                onUpload: { photosToUpload in
+                    let images = photosToUpload.map { $0.image }
+                    let descriptions = photosToUpload.map { $0.description }
+                    
+                    // TODO: 설명을 함께 전송하려면 ViewModel과 APIService 수정이 필요합니다.
+                    print("업로드할 사진 설명: \(descriptions)")
+                    
+                    if let userKey = userKey,
+                       let nick = userViewModel.user?.nick,
+                       let albumkey = album?.albumkey {
+                        viewModel.uploadPhoto(userkey: userKey, usernick: nick, albumkey: albumkey, images: images)
+                    }
+                    isShowingUploadSheet = false
+                },
+                onCancel: {
+                    isShowingUploadSheet = false
+                }
+            )
+        }
+        
+        
     }
     
     /// 개별 사진 셀을 그리는 뷰 빌더입니다. `AsyncImage`를 사용합니다.
@@ -161,6 +195,84 @@ struct PhotoListView: View {
         isLoadingNextPage = true
         if let userKey = userKey, let album = album {
             viewModel.photoList(userKey: userKey, albumKey: album.albumkey, lastPhotoKey: lastPhotoKey)
+        }
+    }
+    
+    /// PhotosPicker에서 선택된 아이템들을 UIImage로 변환하고 업로드 시트를 띄울 준비를 합니다.
+    private func preparePhotosForUpload(items: [PhotosPickerItem]) {
+        guard !items.isEmpty else { return }
+        
+        Task {
+            var newPhotos: [UploadablePhoto] = []
+            for item in items {
+                if let data = try? await item.loadTransferable(type: Data.self),
+                   let image = UIImage(data: data) {
+                    newPhotos.append(UploadablePhoto(image: image))
+                }
+            }
+            
+            self.selectedItems = []
+            
+            if !newPhotos.isEmpty {
+                self.uploadablePhotos = newPhotos
+                self.isShowingUploadSheet = true
+            }
+        }
+    }
+    
+}
+
+struct UploadablePhoto: Identifiable {
+    let id = UUID()
+    let image: UIImage
+    var description: String = ""
+}
+
+// MARK: - 사진 업로드 및 설명 입력을 위한 시트 뷰
+struct PhotoUploadSheetView: View {
+    @Binding var uploadablePhotos: [UploadablePhoto]
+    var onUpload: ([UploadablePhoto]) -> Void
+    var onCancel: () -> Void
+    
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 20) {
+                    Text("사진에 설명을 추가하세요.").font(.headline).padding(.top)
+
+                    ForEach($uploadablePhotos) { $photo in
+                        HStack(alignment: .top, spacing: 15) {
+                            Image(uiImage: photo.image)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 80, height: 80)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                .clipped()
+                            
+                            TextField("설명 입력...", text: $photo.description, axis: .vertical)
+                                .font(.subheadline)
+                                .padding(8)
+                                .background(Color(uiColor: .systemGray6))
+                                .cornerRadius(10)
+                                .lineLimit(3...)
+                        }
+                    }
+                }
+                .padding()
+            }
+            .navigationTitle("사진 업로드")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("취소", action: onCancel)
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("업로드") { onUpload(uploadablePhotos) }.fontWeight(.bold)
+                }
+            }
+            .onDisappear {
+                uploadablePhotos = []
+            }
         }
     }
 }
