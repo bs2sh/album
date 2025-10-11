@@ -4,11 +4,11 @@ const { v4: uuidv4 } = require('uuid');
 
 const db = require('./db');
 
-function addPhoto(path, userKey, userNick, albumKey, regdt) {
+function addPhoto(path, description, userKey, userNick, albumKey, regdt) {
   return new Promise((resolve, reject) => {
     const sql = `
-            INSERT INTO photo (photo_key, photo_path, owner, owner_nick, album_key, regdt)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO photo (photo_key, photo_path, owner, owner_nick, album_key, regdt, comment)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         `
     let photoKey = uuidv4()
     const params = [
@@ -17,7 +17,8 @@ function addPhoto(path, userKey, userNick, albumKey, regdt) {
       userKey,
       userNick,
       albumKey,
-      regdt
+      regdt,
+      description
     ]
 
     db.run(sql, params, (err) => {
