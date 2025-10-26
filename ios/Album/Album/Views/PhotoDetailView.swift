@@ -193,7 +193,7 @@ struct CommentOverlayView : View {
                     .background(.gray.opacity(0.5))
                 
                 // 사진 설명.
-                Text("사진 설명 들어감. 개발중이에요~~")
+                Text(photo.description)
                     .font(.subheadline)
                     .foregroundStyle(.primary.opacity(0.9))
                     .padding(.top, 4)
@@ -281,14 +281,14 @@ struct CommentOverlayView : View {
 
 
 #Preview {
-    let photo = Photo(photokey: "ef6a3309-bf53-4b48-8b76-fa88afb6c318", photopath: "uploads/imgs/1753156284536-image1.jpg", owner: 3, ownernick: "xxxcc", albumkey: "197be471-4109-4602-8041-b3bdda77baf7", regdt: 1758465739331)
+    let photo = Photo(photokey: "ef6a3309-bf53-4b48-8b76-fa88afb6c318", photopath: "uploads/imgs/1753156284536-image1.jpg", owner: 3, ownernick: "xxxcc", albumkey: "197be471-4109-4602-8041-b3bdda77baf7", regdt: 1758465739331, description: "설명은 이거에요.")
     PhotoDetailView(photo: photo)
         
 }
 
 #Preview {
     @Previewable @State var isPresented = true
-    let photo = Photo(photokey: "f3b86da9-f609-4123-b659-dd1fb866e283", photopath: "uploads/imgs/1753156284552-image2.jpg", owner: 3, ownernick: "xxxcc", albumkey: "197be471-4109-4602-8041-b3bdda77baf7", regdt: 1753156284559)
+    let photo = Photo(photokey: "f3b86da9-f609-4123-b659-dd1fb866e283", photopath: "uploads/imgs/1753156284552-image2.jpg", owner: 3, ownernick: "xxxcc", albumkey: "197be471-4109-4602-8041-b3bdda77baf7", regdt: 1753156284559, description: "설명은 이거에요.")
     CommentOverlayView(viewModel: PhotoDetailViewModel(), isPresented: $isPresented, photo: photo)
 }
 

@@ -28,13 +28,14 @@ struct Photo: Codable, Hashable, Identifiable, Equatable {
     let owner: Int
     let ownernick, albumkey: String
     let regdt: Int
+    let description: String
     
     enum CodingKeys: String, CodingKey {
         case photokey = "photo_key"
         case photopath = "photo_path"
         case ownernick = "owner_nick"
         case albumkey = "album_key"
-        case owner, regdt
+        case owner, regdt, description
     }
     
 }
