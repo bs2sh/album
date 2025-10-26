@@ -7,7 +7,7 @@ const db = require('./db');
 function addPhoto(path, description, userKey, userNick, albumKey, regdt) {
   return new Promise((resolve, reject) => {
     const sql = `
-            INSERT INTO photo (photo_key, photo_path, owner, owner_nick, album_key, regdt, comment)
+            INSERT INTO photo (photo_key, photo_path, owner, owner_nick, album_key, regdt, description)
             VALUES (?, ?, ?, ?, ?, ?, ?)
         `
     let photoKey = uuidv4()
