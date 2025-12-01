@@ -20,7 +20,8 @@ struct PhotoDetailView: View {
     var body: some View {
         
         ZStack {
-            ImageZoomView(imageUrl: photoUrl(photoPath: photo?.photopath ?? ""))
+//            ImageZoomView(imageUrl: photoUrl(photoPath: photo?.photopath ?? ""))
+            UIZoomView(imageUrl: photoPath(path: photo?.photopath ?? ""))
             
             VStack {
                 Spacer()

@@ -29,6 +29,11 @@ func photoUrl(photoPath: String) -> URL {
     return URL(string:"http://127.0.0.1:3100/image/\(path)")!
 }
 
+func photoPath(path: String) -> String {
+    let path2 = path.replacingOccurrences(of: "uploads/imgs/", with: "")
+    return "http://127.0.0.1:3100/image/\(path2)"
+}
+
 func formattedDate(from timestamp: Double) -> String {
     let date = Date(timeIntervalSince1970: timestamp)
     let formatter = RelativeDateTimeFormatter()

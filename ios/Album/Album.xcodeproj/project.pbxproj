@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A21E3C5A2EDDF9DA00DF8D2A /* UIZoomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21E3C592EDDF9D400DF8D2A /* UIZoomView.swift */; };
 		A2234B812E8AF3900028FB29 /* KeyboardResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2234B802E8AF3870028FB29 /* KeyboardResponder.swift */; };
 		A22891132E4B9045003A2830 /* InviteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22891122E4B9040003A2830 /* InviteModel.swift */; };
 		A22891152E4C5D11003A2830 /* TextInputPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22891142E4C5D00003A2830 /* TextInputPopup.swift */; };
@@ -54,6 +55,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A21E3C592EDDF9D400DF8D2A /* UIZoomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIZoomView.swift; sourceTree = "<group>"; };
 		A2234B802E8AF3870028FB29 /* KeyboardResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardResponder.swift; sourceTree = "<group>"; };
 		A22891122E4B9040003A2830 /* InviteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteModel.swift; sourceTree = "<group>"; };
 		A22891142E4C5D00003A2830 /* TextInputPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputPopup.swift; sourceTree = "<group>"; };
@@ -113,6 +115,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A21E3C582EDDF8C800DF8D2A /* ZoomView */ = {
+			isa = PBXGroup;
+			children = (
+				A21E3C592EDDF9D400DF8D2A /* UIZoomView.swift */,
+			);
+			path = ZoomView;
+			sourceTree = "<group>";
+		};
 		A271E5832E57981300106EDA /* Cell */ = {
 			isa = PBXGroup;
 			children = (
@@ -188,10 +198,10 @@
 			isa = PBXGroup;
 			children = (
 				A2664F832E825D0D00FB323F /* CommentModel.swift */,
+				A283FE852E408D4200E82C0F /* MembersModel.swift */,
 				A271E5882E603BAA00106EDA /* MyInfoModel.swift */,
 				A22891122E4B9040003A2830 /* InviteModel.swift */,
 				A283FE782E28D64600E82C0F /* BaseResponse.swift */,
-				A283FE852E408D4200E82C0F /* MembersModel.swift */,
 				A283FE7A2E312EE200E82C0F /* PhotoListModel.swift */,
 				A283FE742E28D34A00E82C0F /* UserModel.swift */,
 				A283FE712E278A9600E82C0F /* PhotoModel.swift */,
@@ -205,8 +215,9 @@
 		A2B888632E24B3D5000D886A /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				A2D362792E715B8D00EAA492 /* ProfileView.swift */,
 				A271E5832E57981300106EDA /* Cell */,
+				A21E3C582EDDF8C800DF8D2A /* ZoomView */,
+				A2D362792E715B8D00EAA492 /* ProfileView.swift */,
 				A22891182E538ACB003A2830 /* InviteListView.swift */,
 				A22891162E4F9D3F003A2830 /* MyInfoView.swift */,
 				A22891142E4C5D00003A2830 /* TextInputPopup.swift */,
@@ -320,6 +331,7 @@
 				A283FE802E32143200E82C0F /* PhotoDetailView.swift in Sources */,
 				A28D160C2E03F6370011563A /* AlbumApp.swift in Sources */,
 				A22891152E4C5D11003A2830 /* TextInputPopup.swift in Sources */,
+				A21E3C5A2EDDF9DA00DF8D2A /* UIZoomView.swift in Sources */,
 				A283FE722E278A9D00E82C0F /* PhotoModel.swift in Sources */,
 				A23156CA2E1312D900906FB2 /* Extensions.swift in Sources */,
 				A27B836D2E0A8F23005B2C54 /* JoinModel.swift in Sources */,
