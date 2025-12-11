@@ -26,12 +26,6 @@
 저장 이미지 암호화 (예정) : 암/복호화 키를 앨범 주인이 직접 생성하여 이미지를 암호화하고 복호화 합니다.
 
 <br>
-
-📱 주요 화면 (Screenshots)
-로그인	메인 피드	앨범 상세
-[로그인 화면 이미지]	[메인 피드 화면 이미지]	[앨범 상세 화면 이미지]
-(실제 앱 스크린샷 이미지로 교체해주세요.)
-
 <br>
 
 🔧 기술 스택 (Tech Stack & Architecture)
@@ -53,7 +47,7 @@ Backend
 
 Runtime Environment: Node.js
 
-Framework: Express.js (혹은 사용하신 프레임워크)
+Framework: Express.js
 
 Database: SQLite
 
@@ -75,7 +69,7 @@ iOS 개발 역량 강화: SwiftUI와 Combine을 깊이 있게 학습하고, 실�
 
 [ ] 신규 사진 업로드 시 푸시 알림(Push Notification) 기능 구현
 
-[ ] Android 버전 개발 (Kotlin, Jetpack Compose)
+[ ] Android 버전 개발 ~~(Kotlin, Jetpack Compose)~~ React Native를 이용하여 개발.
 
 [ ] 서비스 확장성을 고려하여 데이터베이스를 PostgreSQL 또는 MySQL로 마이그레이션
 
