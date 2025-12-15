@@ -263,3 +263,4 @@ iOSInjectionProject/
 # End of https://www.toptal.com/developers/gitignore/api/swift,xcode,visualstudiocode,node,espresso
 server/node/uploads/imgs/
 
+serviceAccount.json
