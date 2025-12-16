@@ -65,6 +65,16 @@ response
         email
     }
 
+6. 푸시키 등록
+/user/updatetoken
+request
+    userKey INT :
+    device String: "I" or "A"
+    token String : 푸시키
+response
+    result
+    msg
+
 11. 앨범 생성
 /album/create
 request
