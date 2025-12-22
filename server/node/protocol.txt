@@ -3,7 +3,7 @@
 request
     email: String 회원가입할 id
     pw: String 패스워드
-    email: String 이메일
+    nick: String 닉네임
 response
     result: Int 성공/실패
     msg: String 에러 메시지

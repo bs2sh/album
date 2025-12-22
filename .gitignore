@@ -538,4 +538,7 @@ buck-out/
 .history
 .ionide
 
+## Sqltie3 ###
+*.sqlite-journal
+
 # End of https://www.toptal.com/developers/gitignore/api/reactnative,visualstudiocode
