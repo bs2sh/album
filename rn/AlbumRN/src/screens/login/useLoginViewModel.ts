@@ -3,6 +3,9 @@ import { Alert } from "react-native";
 import { login } from "../../api/userAPI";
 import { LoginRequest } from "../../types/userTypes";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "../../navigation/NavigationTypes";
 
 interface LoginViewModel {
   email: string;
@@ -10,9 +13,13 @@ interface LoginViewModel {
   password: string;
   setPassword: (password: string) => void;
   handleLogin: () => void;
+  handleSignUp: () => void;
 }
 
 export const useLoginViewModel = (): LoginViewModel => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -52,11 +59,17 @@ export const useLoginViewModel = (): LoginViewModel => {
     }
   };
 
+  const handleSignUp = () => {
+    console.log("handle SignUp");
+    navigation.navigate("SignUp");
+  };
+
   return {
     email,
     setEmail,
     password,
     setPassword,
     handleLogin,
+    handleSignUp,
   };
 };
