@@ -14,7 +14,14 @@ export const login = async (params: LoginRequest): Promise<LoginResponse> => {
 };
 
 // 회원가입 API 호출 함수
-export const join = async (params: SignUpRequest): Promise<SignUpResponse> => {
+export const signUp = async (
+  params: SignUpRequest
+): Promise<SignUpResponse> => {
   const response = await client.post<SignUpResponse>("/user/join", params);
+  return response.data;
+};
+
+export const fetchData = async <T, R>(url: string, params: T): Promise<R> => {
+  const response = await client.post<R>(url, params);
   return response.data;
 };
