@@ -3,4 +3,5 @@
 export type RootStackParamList = {
   Login: undefined;
   SignUp: undefined;
+  AlbumList: undefined;
 };

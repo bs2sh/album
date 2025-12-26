@@ -5,18 +5,50 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 import LoginScreen from "./src/screens/Login/LoginScreen";
 import SignUpScreen from "./src/screens/SignUp/SignUpScreen";
+import AlbumListScreen from "./src/screens/AlbumList/AlbumListScreen";
 
 import { RootStackParamList } from "./src/navigation/NavigationTypes";
+import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Stack 네비게이터 생성
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [initialRoute, setInitialRoute] =
+    useState<keyof RootStackParamList>("Login");
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const userKey = await AsyncStorage.getItem("userKey");
+
+        if (userKey) {
+          // 유저키가 있으면 로그인 되어 있는 상태 -> AlbumList 보여준다.
+          console.log(`유저키 있음. ${userKey}`);
+          setInitialRoute("AlbumList");
+        } else {
+          // 유저키 없음. 로그인 안됨. -> Login 보여준다.
+          console.log("유저키 없음 . 로그인으로");
+          setInitialRoute("Login");
+        }
+      } catch (e) {
+        console.error("로그인 실패 ::", e);
+        setInitialRoute("Login");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
+
   return (
     <SafeAreaProvider>
       <NavigationContainer>
         {/* 앱실행시 처음 보여줄 화면 */}
-        <Stack.Navigator initialRouteName="Login" id="RootStack">
+        <Stack.Navigator initialRouteName={initialRoute} id="RootStack">
           {/* 로그인 화면 */}
           <Stack.Screen
             name="Login"
@@ -28,6 +60,12 @@ export default function App() {
             name="SignUp"
             component={SignUpScreen}
             options={{ headerShown: false, presentation: "modal" }}
+          />
+          {/* 앨범리스트 화면 */}
+          <Stack.Screen
+            name="AlbumList"
+            component={AlbumListScreen}
+            options={{ title: "내앨범", headerShown: true }}
           />
         </Stack.Navigator>
       </NavigationContainer>

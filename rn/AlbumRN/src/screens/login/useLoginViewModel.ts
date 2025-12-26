@@ -13,7 +13,7 @@ interface LoginViewModel {
   password: string;
   setPassword: (password: string) => void;
   handleLogin: () => void;
-  handleSignUp: () => void;
+  handleSignUp: () => void; // 로그인 화면에서 사용자등록 눌렀을 때.
 }
 
 export const useLoginViewModel = (): LoginViewModel => {
@@ -40,14 +40,18 @@ export const useLoginViewModel = (): LoginViewModel => {
       // 3. API 호출
       const response = await login(params);
 
+      console.log(`login response : ${response}`);
       // 4. 결과 처리 (백엔드가 내려주는 result 값에 따라 분기)
       if (response.result === 1) {
+        // 유저키 저장.
+        await AsyncStorage.setItem("userKey", String(response.userKey));
+
         console.log("로그인 성공! UserKey:", response.userKey);
         Alert.alert("성공", "로그인되었습니다.");
 
-        // 유저키 저장.
-        await AsyncStorage.setItem("userKey", response.userKey);
-        Alert.alert("성공", "로그인되었습니다.");
+        // 앨범리스트로 이동.
+        // 로그인 화면을 스택에서 없애고 AlbumListfmf 새로운 루트로 설정.
+        navigation.reset({ index: 0, routes: [{ name: "AlbumList" }] });
       } else {
         // 실패 시 백엔드에서 보내준 메시지(msg)를 띄워줍니다.
         Alert.alert("로그인 실패", response.msg);

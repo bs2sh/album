@@ -10,6 +10,7 @@ import {
 // 로그인 API 호출 함수
 export const login = async (params: LoginRequest): Promise<LoginResponse> => {
   const response = await client.post<LoginResponse>("/user/login", params);
+  console.log(`response :: ${response}`);
   return response.data;
 };
 

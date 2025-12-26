@@ -17,7 +17,7 @@ import { useSignUpViewModel } from "./useSignUpViewModel";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
-const SignUpScreen = () => {
+const SignUpScreen: React.FC = () => {
   const {
     email,
     setEmail,
