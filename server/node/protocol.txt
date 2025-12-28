@@ -85,6 +85,27 @@ response
     msg
     albumkey: String 앨범 고유 키
 
+11. 가입한 앨범 리스트
+/user/joinalbums
+request
+    userKey: Int 유저키
+response
+    result: Int 
+    msg: String
+    albums: [
+        {
+            albumkey,
+            title,
+            members: String (,로 구분된 유저키 리스트 string),
+            owner, 
+            enable
+        }
+        .
+        .
+    ]
+
+
+
 
 11. 앨범 가입
 /user/joinalbum
