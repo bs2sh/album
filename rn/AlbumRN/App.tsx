@@ -6,6 +6,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import LoginScreen from "./src/screens/Login/LoginScreen";
 import SignUpScreen from "./src/screens/SignUp/SignUpScreen";
 import AlbumListScreen from "./src/screens/AlbumList/AlbumListScreen";
+import PhotoListScreen from "./src/screens/PhotoList/PhotoListScreen";
 
 import { RootStackParamList } from "./src/navigation/NavigationTypes";
 import { useEffect, useState } from "react";
@@ -48,7 +49,13 @@ export default function App() {
     <SafeAreaProvider>
       <NavigationContainer>
         {/* 앱실행시 처음 보여줄 화면 */}
-        <Stack.Navigator initialRouteName={initialRoute} id="RootStack">
+        <Stack.Navigator
+          initialRouteName={initialRoute}
+          id="RootStack"
+          screenOptions={{
+            headerBackButtonDisplayMode: "minimal",
+          }}
+        >
           {/* 로그인 화면 */}
           <Stack.Screen
             name="Login"
@@ -66,6 +73,11 @@ export default function App() {
             name="AlbumList"
             component={AlbumListScreen}
             options={{ title: "내앨범", headerShown: true }}
+          />
+          <Stack.Screen
+            name="PhotoList"
+            component={PhotoListScreen}
+            options={{ title: "", headerShown: true }}
           />
         </Stack.Navigator>
       </NavigationContainer>
