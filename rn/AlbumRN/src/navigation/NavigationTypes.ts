@@ -9,4 +9,5 @@ export type RootStackParamList = {
   InviteList: undefined; // 초대 리스트
   CreateAlbum: undefined; // 앨범 만들기 (모달)
   MyInfo: undefined; // 내 정보
+  InviteListScreen: undefined; // 초대 목록
 };

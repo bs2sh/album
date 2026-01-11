@@ -7,6 +7,7 @@ import LoginScreen from "./src/screens/Login/LoginScreen";
 import SignUpScreen from "./src/screens/SignUp/SignUpScreen";
 import AlbumListScreen from "./src/screens/AlbumList/AlbumListScreen";
 import PhotoListScreen from "./src/screens/PhotoList/PhotoListScreen";
+import InviteListScreen from "./src/screens/InviteList/InviteListScreen";
 
 import { RootStackParamList } from "./src/navigation/NavigationTypes";
 import { useEffect, useState } from "react";
@@ -78,6 +79,11 @@ export default function App() {
             name="PhotoList"
             component={PhotoListScreen}
             options={{ title: "", headerShown: true }}
+          />
+          <Stack.Screen
+            name="InviteList"
+            component={InviteListScreen}
+            options={{ title: "초대목록", headerShown: true }}
           />
         </Stack.Navigator>
       </NavigationContainer>
