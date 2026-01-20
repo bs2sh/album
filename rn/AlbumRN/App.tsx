@@ -8,6 +8,7 @@ import SignUpScreen from "./src/screens/SignUp/SignUpScreen";
 import AlbumListScreen from "./src/screens/AlbumList/AlbumListScreen";
 import PhotoListScreen from "./src/screens/PhotoList/PhotoListScreen";
 import InviteListScreen from "./src/screens/InviteList/InviteListScreen";
+import MyInfoScreen from "./src/screens/MyInfo/MyInfoScreen";
 
 import { RootStackParamList } from "./src/navigation/NavigationTypes";
 import { useEffect, useState } from "react";
@@ -84,6 +85,11 @@ export default function App() {
             name="InviteList"
             component={InviteListScreen}
             options={{ title: "초대목록", headerShown: true }}
+          />
+          <Stack.Screen
+            name="MyInfo"
+            component={MyInfoScreen}
+            options={{ title: "내정보", headerShown: true }}
           />
         </Stack.Navigator>
       </NavigationContainer>
