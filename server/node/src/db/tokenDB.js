@@ -37,7 +37,21 @@ function deleteToken(userKey) {
   });
 }
 
+function getToken(userKey) {
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT * FROM token WHERE user_key = ?";
+    db.get(sql, [userKey], (err, row) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(row);
+      }
+    });
+  });
+}
+
 module.exports = {
   upsertToken,
   deleteToken,
+  getToken,
 };

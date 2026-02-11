@@ -9,10 +9,6 @@ app.use(express.urlencoded({ extended: true }));
 const responseInterceptor = require('./middleware/responseInterceptor');
 app.use(responseInterceptor);
 
-app.get('/test-interceptor', (req, res) => {
-  res.json({ message: 'interceptor working' });
-});
-
 const indexRouter = require('./routes/index');
 app.use('/', indexRouter);
 
